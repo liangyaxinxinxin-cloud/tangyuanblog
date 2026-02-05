@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI 产品经理理论知识手册</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020617;
+      --fg: #e5e7eb;
+      --border: #1f2937;
+      --accent: #60a5fa;
+      --code-bg: #0f172a;
+      --code-fg: #cbd5e1;
+      --code-border: rgba(148, 163, 184, 0.35);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, -system-ui, "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: var(--fg);
+    }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to right, rgba(15, 23, 42, 0.94), rgba(30, 64, 175, 0.94));
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .site-header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #e5e7eb;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .logo-mark {
+      width: 22px;
+      height: 22px;
+      border-radius: 8px;
+      background: radial-gradient(circle at 20% 20%, #f97316, #ea580c 45%, #facc15);
+      box-shadow:
+        0 0 0 1px rgba(248, 250, 252, 0.35),
+        0 12px 25px rgba(15, 23, 42, 0.7);
+    }
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #cbd5f5;
+    }
+    .nav-pill {
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: default;
+      background: rgba(15, 23, 42, 0.7);
+    }
+    .nav-pill.active {
+      background: #f97316;
+      color: #111827;
+      font-weight: 600;
+      border-color: rgba(248, 250, 252, 0.6);
+    }
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px 18px 40px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 22px;
+      align-items: flex-start;
+    }
+    .sidebar {
+      position: sticky;
+      top: 62px;
+      align-self: flex-start;
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
+      padding: 14px 14px 18px;
+      border-radius: 18px;
+      background: radial-gradient(circle at top, #020617, #020617 40%, #020617);
+      box-shadow:
+        0 18px 40px rgba(15, 23, 42, 0.8),
+        0 0 0 1px rgba(30, 64, 175, 0.65);
+      color: #e5e7eb;
+    }
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .sidebar-title span {
+      font-size: 11px;
+      color: #9ca3af;
+      font-weight: 400;
+    }
+    .sidebar-nav {
+      margin: 6px 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 12px;
+    }
+    .sidebar-nav-section {
+      margin-bottom: 6px;
+    }
+    .sidebar-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      border-radius: 10px;
+      padding: 5px 8px;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .sidebar-section-header:hover {
+      background: rgba(37, 99, 235, 0.2);
+    }
+    .sidebar-section-header span {
+      font-weight: 500;
+    }
+    .sidebar-section-header small {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+    .sidebar-section-header .chevron {
+      font-size: 10px;
+      opacity: 0.7;
+    }
+    .sidebar-links {
+      list-style: none;
+      padding: 2px 0 4px 12px;
+      margin: 0;
+    }
+    .sidebar-links li a {
+      display: block;
+      padding: 3px 6px 3px 2px;
+      color: #9ca3af;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: color 0.15s ease, background 0.15s ease, transform 0.05s;
+    }
+    .sidebar-links li.sidebar-h4 a {
+      padding-left: 14px;
+      font-size: 11px;
+    }
+    .sidebar-links li a:hover {
+      color: #e5e7eb;
+      background: rgba(37, 99, 235, 0.35);
+      transform: translateX(1px);
+    }
+    .sidebar-links li a.active {
+      color: #fefce8;
+      background: linear-gradient(to right, #f97316, #f59e0b);
+    }
+    .main {
+      min-width: 0;
+    }
+    .card {
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.96), #020617 45%, #020617);
+      backdrop-filter: blur(18px);
+      border-radius: 24px;
+      box-shadow:
+        0 24px 70px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(30, 64, 175, 0.7);
+      padding: 24px 26px 28px;
+      color: #e5e7eb;
+    }
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .sidebar {
+        position: static;
+        max-height: none;
+        box-shadow:
+          0 0 0 1px rgba(30, 64, 175, 0.7);
+        margin-bottom: 12px;
+      }
+    }
+    @media (max-width: 720px) {
+      .page {
+        padding: 14px 10px 30px;
+      }
+      .card {
+        border-radius: 18px;
+        padding: 18px 14px 22px;
+      }
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .title-block h1 {
+      margin: 0 0 4px;
+      font-size: 26px;
+      letter-spacing: 0.02em;
+    }
+    .title-block p {
+      margin: 0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    .badge {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 6px 14px;
+      font-size: 11px;
+      color: #cbd5e1;
+      background: rgba(30, 58, 138, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      font-size: 11px;
+      color: #94a3b8;
+      border-top: 1px dashed rgba(148, 163, 184, 0.6);
+      padding-top: 10px;
+      margin-bottom: 20px;
+    }
+    .meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .meta-label {
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+    #toc {
+      border-radius: 14px;
+      border: 1px dashed rgba(148, 163, 184, 0.45);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.9));
+      padding: 10px 12px;
+      margin-bottom: 18px;
+      font-size: 12px;
+    }
+    #toc strong {
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+    #toc ul {
+      margin: 4px 0 0 16px;
+      padding: 0;
+    }
+    #toc li {
+      margin: 1px 0;
+    }
+    #toc a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+    #toc a:hover {
+      text-decoration: underline;
+    }
+    #content {
+      line-height: 1.65;
+      font-size: 14px;
+    }
+    #content h2, #content h3, #content h4 {
+      scroll-margin-top: 90px;
+    }
+    #content h2 {
+      margin-top: 24px;
+      margin-bottom: 10px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(209, 213, 219, 0.9);
+      font-size: 20px;
+    }
+    #content h3 {
+      margin-top: 18px;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+    #content h4 {
+      margin-top: 14px;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+    #content p {
+      margin: 6px 0;
+    }
+    #content ul, #content ol {
+      padding-left: 22px;
+      margin: 4px 0 10px;
+    }
+    #content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    #content th, #content td {
+      padding: 8px 12px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #cbd5e1;
+    }
+    #content th {
+      background: rgba(30, 58, 138, 0.35);
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    #content code {
+      font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      background: var(--code-bg);
+      color: var(--code-fg);
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    #content pre {
+      background: var(--code-bg);
+      color: var(--code-fg);
+      padding: 10px 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 12px;
+      border: 1px solid var(--code-border);
+    }
+    #content pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+    #content blockquote {
+      border-left: 3px solid rgba(59, 130, 246, 0.7);
+      margin: 8px 0;
+      padding-left: 10px;
+      color: #cbd5e1;
+      font-size: 13px;
+      background: rgba(30, 58, 138, 0.25);
+      border-radius: 0 8px 8px 0;
+    }
+    .footer-tip {
+      margin-top: 26px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.7);
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .footer-tip strong {
+      color: #cbd5e1;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div class="site-header">
+    <div class="site-header-inner">
+      <a class="logo" href="#">
+        <span class="logo-mark"></span>
+        <span>AI Product School</span>
+      </a>
+      <div class="nav-tabs">
+        <span class="nav-pill active">AI 产品经理理论课</span>
+        <span class="nav-pill">（预留）实战案例库</span>
+        <span class="nav-pill">（预留）面试题刷题区</span>
+      </div>
+    </div>
+  </div>
+  <div class="page">
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">
+          AI 产品经理课程目录
+          <span>点击章节查看详细内容</span>
+        </div>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+      <main class="main">
+        <div class="card">
+          <div class="header">
+            <div class="title-block">
+              <h1>AI 产品经理理论知识手册</h1>
+              <p>从大模型原理到 Agent 设计，从数据到评估的系统知识图谱</p>
+            </div>
+            <div class="badge">
+              <span class="badge-dot"></span>
+              <span>v1.0 · 适合自学 / 面试 / 实战查阅</span>
+            </div>
+          </div>
+          <div class="meta">
+            <span><span class="meta-label">作者</span> 汤圆（传统 PM → AI PM 转型）</span>
+            <span><span class="meta-label">定位</span> AI / 大模型方向产品经理理论手册</span>
+            <span><span class="meta-label">形式</span> Markdown 原文 + HTML 阅读版</span>
+          </div>
+          <div id="toc"></div>
+          <article id="content"></article>
+          <div class="footer-tip">
+            <strong>提示：</strong>建议将本页加入浏览器书签，作为你的 AI 产品“随身知识库”。若原文有更新，可直接替换同名 <code>.md</code> 与本 <code>.html</code> 文件。
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- 原始 Markdown 内容内联，方便在本地离线浏览，无需构建工具 -->
+  <script id="md-source" type="text/markdown">
+---
+title: AI 产品经理理论知识手册
+author: 汤圆（传统 PM → AI PM 转型）
+version: v1.0
+created_at: 2025-02-04
+---
+
+> 说明：本手册面向有一定产品经验、正在或准备转型为 **AI / 大模型方向产品经理** 的从业者。  
+> 重点不是教你推数学公式，而是帮你建立一套 **能实战、能解释、能面试** 的理论框架。
+
+---
+
+## 一、手册定位与使用方式
+
+### 1.1 适用人群
+
+- **有 3 年以上互联网产品经验**，希望向 AI / 大模型方向转型的产品经理；
+- **已经在做 AI 相关工作**，但理论基础不系统，希望补齐底层认知的人；
+- **准备面试 AI 产品经理岗位**，需要一套结构化知识地图的人。
+
+### 1.2 手册不做的事
+
+- 不讲复杂数学推导、概率论公式、梯度计算细节；
+- 不教你从零写训练代码；
+- 不做模型评测 benchmark 的全面综述。
+
+### 1.3 手册重点做的事
+
+- 把 **技术名词 → 产品语言**，让你能和算法、工程对齐理解；
+- 把 **理论概念 → 典型业务场景 & 决策框架**；
+- 把 **面试八股 → 可落地的认知体系**；
+- 结合 **大模型 / Agent / RAG / 微调 / 评估 / 行业应用**，形成一整套“AI PM 的理论地图”。
+
+### 1.4 推荐使用方式
+
+- **第一次**：快速通读，形成整体“地图感”；
+- **第二次**：按你当前工作/面试需求，重点精读某几个模块；
+- **之后长期**：每完成一个 AI 项目，就回到手册相应章节，补充“你的实战案例”，把它变成个人方法论文档。
+
+---
+
+## 二、总体知识框架
+
+### 2.1 知识模块总览
+
+本手册围绕 AI 产品经理的成长路径，将知识拆为六大模块：
+
+1. **AI 基础理论知识**：大模型原理、机器学习基础、Transformer、训练与推理全流程等；
+2. **AI 产品经理核心能力**：AI 产品思维、设计流程、数据策略、评估指标、可演进性、UX 等；
+3. **Agent 智能体与设计模式**：Agent 本质、设计模式、Coze Skills、RAG、提示工程；
+4. **大模型技术细节**：微调方法、训练与推理工程、向量数据库、评测体系；
+5. **行业应用与实战案例**：典型行业场景与解决方案思路；
+6. **面试准备与职业发展**：高频面试题、项目故事包装、职业路径规划。
+
+### 2.2 知识体系图（文本版）
+
+```text
+AI 产品经理知识体系
+│
+├─ 理论基础层
+│  ├─ AI / ML 基础概念
+│  ├─ 大模型与 Transformer 原理
+│  └─ 训练 / 微调 / 推理全流程
+│
+├─ 产品能力层
+│  ├─ AI 产品思维与系统化思维
+│  ├─ 产品设计流程与 UX
+│  ├─ 数据策略与数据标注
+│  ├─ 模型评估与指标体系
+│  └─ 可演进性与架构意识
+│
+├─ 技术理解层
+│  ├─ 微调方法（SFT / LoRA / PEFT）
+│  ├─ Agent & Agentic Design Patterns
+│  ├─ RAG（检索增强生成）与向量库
+│  └─ 提示工程与工具编排
+│
+└─ 业务应用层
+   ├─ 行业落地案例
+   ├─ AI 商业模式与 ROI
+   ├─ 面试与项目故事
+   └─ 职业发展与学习路径
+```
+
+---
+
+## 三、模块一：AI 基础理论知识
+
+> 目标：为 AI PM 打下“能看懂、能解释、能参与技术讨论”的基础，而不是成为算法工程师。
+
+### 3.1 大语言模型（LLM）基础概念
+
+#### 3.1.1 什么是大语言模型？
+
+- **定义**：大语言模型（Large Language Model, LLM）是基于深度学习、在海量文本数据上预训练得到的模型，具备理解与生成自然语言的能力。
+- **产品视角的一句话**：
+  - 大语言模型本质是一个 **“超级文本补全机器”**，给它一段输入，它会根据训练得到的经验，预测下一段最合理的输出。
+
+#### 3.1.2 工作原理：预测下一个 token
+
+示例：
+
+```text
+输入："今天天气"
+模型可能输出："很好"、"真不错"、"不太好"……
+本质：计算每个候选词出现的概率，选择更“合理”的那个。
+```
+
+作为产品经理，你需要理解：
+
+- 模型并不是在“思考”，而是在做 **条件概率预测**；
+- 所有能力（写作、问答、翻译、代码生成）都来自“预测下一个 token”这一机制；
+- 模型会出现“幻觉”，是结构性问题，而不是简单的“模型不够聪明”。
+
+#### 3.1.3 大模型的关键特征
+
+- **规模性**：参数量动辄数十亿（B）到数千亿（B+），甚至万亿（T）；
+- **通用性**：无需为每个任务单独训练，在统一模型上通过提示就能完成多任务；
+- **涌现能力**：当模型规模足够大时，会出现训练时没有明确教授的新能力（如少样本学习、复杂推理等）。
+
+#### 3.1.4 模型类型与适用场景
+
+- **生成式（Decoder-only）模型**：
+  - 代表：GPT 系列、Claude、Gemini 等；
+  - 特点：擅长文本生成和对话；
+  - 场景：聊天机器人、写作助手、代码助手等。
+- **编码器（Encoder-only）模型**：
+  - 代表：BERT、RoBERTa 等；
+  - 特点：擅长理解和表征； 
+  - 场景：文本分类、情感分析、检索召回等。
+- **编码-解码（Encoder-Decoder）模型**：
+  - 代表：T5、BART 等；
+  - 特点：理解+生成兼备；
+  - 场景：机器翻译、摘要生成等。
+
+**作为产品经理，你需要会回答**：
+
+- 做聊天机器人 → 优先考虑 Decoder-only（GPT 类）；
+- 做舆情分析、文本打标签 → Encoder-only（BERT 类）；
+- 做翻译、结构化摘要 → Encoder-Decoder（T5 类）。
+
+---
+
+### 3.2 机器学习与深度学习基础
+
+#### 3.2.1 机器学习的三大范式
+
+1. **监督学习（Supervised Learning）**
+   - 有“标准答案”：每个样本都有输入 x 和标签 y；
+   - 典型任务：分类、回归；
+   - 场景：垃圾邮件识别、信用评分。
+2. **无监督学习（Unsupervised Learning）**
+   - 没有标签，模型自己从数据中找结构；
+   - 典型任务：聚类、降维；
+   - 场景：用户分群、异常检测。
+3. **强化学习（Reinforcement Learning）**
+   - 模型通过“与环境交互 + 奖励/惩罚”学习策略；
+   - 场景：游戏 AI、机器人控制、推荐策略优化。
+
+> 大模型中的使用：
+> - 预训练：本质是一种“大规模、自监督学习”；
+> - RLHF：在指令模型上，用强化学习让模型更符合人类偏好。
+
+#### 3.2.2 深度学习核心概念
+
+- **神经网络**：多层线性变换 + 非线性激活函数的堆叠。
+- **前向传播**：输入数据经过各层网络，得到输出。
+- **反向传播**：根据输出和标签的误差，计算各层梯度，更新参数。
+- **损失函数**：衡量预测与真实标签之间差距的函数。
+
+你需要理解的是：
+
+- “训练模型” ≈ **不断让损失函数变小**；
+- 数据质量、网络结构、优化算法都会影响训练效果；
+- 对产品经理而言，最重要的是知道：**什么样的数据 / 目标 / 约束会影响最终模型表现**。
+
+---
+
+### 3.3 Transformer 架构原理
+
+#### 3.3.1 为什么需要 Transformer？
+
+传统序列模型（RNN / LSTM）的局限：
+
+- 序列计算，难以并行，训练速度慢；
+- 长距离依赖难以捕捉，“前文很久以前的信息记不住”。
+
+Transformer 的革命性：
+
+- 完全基于 **自注意力机制（Self-Attention）**；
+- 可以大规模并行训练；
+- 更容易捕捉长距离依赖。
+
+#### 3.3.2 自注意力（Self-Attention）的直觉
+
+人类阅读一句话时，会自动“关注”重要词之间的关系：
+
+> “小明因为生病，所以今天没来学校。”
+
+- “小明” ↔ “没来”；
+- “生病” ↔ “没来”；
+- “学校” 与前面的“没来”也有关系。
+
+自注意力机制就是让模型学会：
+
+- 对输入序列中的每个 token，计算它与其他 token 的相关性，并据此加权求和。
+
+技术上，每个词被映射为三个向量：
+
+- Query（Q）：我要找什么；
+- Key（K）：我是什么；
+- Value（V）：我的内容。
+
+Attention 计算公式（了解即可）：
+
+```text
+Attention(Q, K, V) = softmax(QK^T / √d_k) V
+```
+
+产品经理只要记住：
+
+- 它本质上是在做“对谁更关注”的权重分配；
+- 这就是为什么 Transformer 能很好地处理长文本与复杂依赖。
+
+#### 3.3.3 Transformer 架构与 LLM 的关系
+
+- 经典 Transformer：Encoder + Decoder 结构；
+- GPT：只用 Decoder 堆叠，多层自注意力；
+- BERT：只用 Encoder 堆叠。
+
+你需要能回答：
+
+- **“为什么现在主流大模型几乎都基于 Transformer？”**
+  - 因为它能并行训练、善于处理长序列，并在 NLP 任务上表现优异。
+
+---
+
+### 3.4 训练、微调、对齐、推理全流程
+
+#### 3.4.1 阶段一：预训练（Pre-training）
+
+- **目标**：让模型从海量文本中学习语言规律；
+- **任务**：预测下一个 token / 预测被遮盖的 token；
+- **数据**：互联网文本、书籍、代码等。
+
+产品经理要知道：
+
+- 预训练阶段成本极高（算力 + 时间），一般由大厂、研究机构来做；
+- 普通公司更多是选型：使用开源模型（Llama、Qwen、DeepSeek 等）或商业 API（GPT、Claude、Gemini）。
+
+#### 3.4.2 阶段二：微调（Fine-tuning）
+
+**目的**：让通用大模型适应特定任务/领域。
+
+常见方式：
+
+1. **有监督微调（SFT）**  
+   - 数据：成对的“指令 → 理想输出”；  
+   - 场景：对话助手、任务型机器人。
+2. **指令微调（Instruction Tuning）**  
+   - 让模型更好理解自然语言指令，实现一模型多任务。
+3. **参数高效微调（PEFT）**  
+   - 代表：LoRA、Prefix Tuning、Adapter 等；  
+   - 只训练少量附加参数，大部分参数冻结；  
+   - 优点：成本低、易于部署多版本；
+   - 适合中小团队、初创公司。
+
+作为产品经理，要能判断：
+
+- 只靠 Prompt + RAG 能不能解决；
+- 什么时候必须上微调（如：高专业性、强风格统一要求的场景）。
+
+#### 3.4.3 阶段三：对齐（Alignment）
+
+**目标**：让模型输出符合人类价值观与产品策略。
+
+常见方法：
+
+- **RLHF（人类反馈强化学习）**：
+  - 人类给多种回答打分，训练一个奖励模型；
+  - 再用强化学习优化主模型；
+- **DPO（Direct Preference Optimization）**：
+  - 直接用偏好数据优化模型，相对更稳定简单。
+
+产品经理需要理解：
+
+- 对齐是“好用”、“不乱说话”的关键；
+- 对齐也会引入“保守倾向”：模型会拒绝部分回答；
+- 在敏感领域（金融、医疗、政治）尤其需要对齐与合规策略结合。
+
+#### 3.4.4 推理（Inference）
+
+推理 = 模型在生产环境中被调用、生成输出的过程。
+
+产品关心 4 件事：
+
+1. **延迟（Latency）**：一次调用耗时；
+2. **吞吐量（Throughput）**：系统能处理的并发量；
+3. **上下文长度（Context Length）**：可处理的最大 token 数；
+4. **成本（Cost）**：按 token / QPS / 机器资源计费。
+
+常见推理优化手段（了解即可）：
+
+- 量化（Quantization）：用低精度表示权重，减少显存占用；
+- 蒸馏（Distillation）：大模型教小模型；
+- 批处理（Batching）：合并多个请求一起算，提升吞吐；
+- KV Cache：缓存历史注意力结果，加速长对话。
+
+---
+
+### 3.5 能力边界与幻觉问题
+
+#### 3.5.1 大模型擅长与不擅长
+
+- **擅长**：
+  - 文本生成、改写、翻译、摘要；
+  - 结构化输出（JSON）；
+  - 编码辅助；
+  - 模糊问题的整理与归纳。
+- **不擅长**：
+  - 严格的事实正确性（会幻觉）；
+  - 实时信息（取决于训练截止日期与外部工具）；
+  - 精确计算（容易出错）；
+  - 长期记忆（超出上下文窗口即遗忘）。
+
+#### 3.5.2 幻觉（Hallucination）及应对
+
+- **定义**：模型生成看似合理，但实际上错误或捏造的信息；
+- **根本原因**：它并不会“知道真相”，只是生成“高概率看起来合理的句子”。
+
+产品层面的解决思路：
+
+- 使用 **RAG**，让模型基于可靠数据回答；
+- 要求模型 **给出引用来源**；
+- 针对高风险场景，加入 **人工审核**；
+- 在 UX 上明确告知：内容仅供参考，请用户自我核实。
+
+---
+
+### 3.6 评估指标基础（PM 版）
+
+作为 AI PM，你不需要记一堆公式，但必须：
+
+- 听得懂算法同学在说什么；
+- 能把技术指标翻译成业务影响。
+
+常见技术指标：
+
+- **分类任务**：准确率、精确率、召回率、F1；
+- **生成任务**：BLEU、ROUGE、人工评分；
+- **语言模型**：困惑度（Perplexity，越低越好）。
+
+但在产品侧更重要的是：
+
+- 任务完成率（例如：客服机器人“问题解决率”）；
+- 用户满意度（CSAT、NPS、评分）；
+- 业务指标变化（转化率、留存率、人效）。
+
+---
+
+## 四、模块二：AI 产品经理核心能力
+
+> 目标：从“会用模型”升级为“能负责一条 AI 业务线”的产品经理。
+
+### 4.1 AI 产品思维与系统化思维
+
+#### 4.1.1 传统 PM vs AI PM
+
+| 维度       | 传统产品经理              | AI 产品经理                         |
+|------------|---------------------------|--------------------------------------|
+| 输出确定性 | 逻辑规则确定，结果可预期  | 概率性输出，同一输入结果可能不同    |
+| 核心资产   | 交互流程、功能模块        | 数据、模型能力、评估体系            |
+| 设计方法   | 原型图、流程图、用例      | Prompt、数据策略、模型方案          |
+| 迭代方式   | 需求迭代、版本迭代        | 数据迭代 + 模型迭代 + 产品迭代      |
+| 核心挑战   | 做出“能用”的功能         | 做出“靠谱 + 有价值 + 可控”的智能能力 |
+
+#### 4.1.2 三层系统化思维
+
+一个通用的 AI 产品三层模型：
+
+```text
+用户层（User Layer）
+  - 用户需求 → 场景 → 交互设计
+          ↓
+AI 能力层（AI Capability Layer）
+  - 任务类型 → 模型选型 → Prompt / RAG / 微调 / Agent
+          ↓
+数据层（Data Layer）
+  - 数据收集 → 标注 → 清洗 → 评估 → 迭代
+```
+
+每做一个 AI 功能，都要自问：
+
+1. 这个问题是不是 **真的需要 AI**？
+2. 现有大模型的 **能力边界** 能否覆盖？需要多大模型？
+3. 我有什么 **数据**？缺什么数据？数据从哪来？成本如何？
+4. 成功的 **技术指标 / 业务指标** 分别是什么？
+
+---
+
+### 4.2 AI 产品设计完整流程（8 步法）
+
+#### 步骤 1：问题定义与“是否需要 AI”判断
+
+关键问题：
+
+- 这是 **规则能解决的问题**，还是必须依赖“模糊智能”？
+- AI 能在这个场景里 **带来显著增益** 吗（效率 / 体验 / 收入）？
+- 错误代价是否在可控范围内？
+
+实践建议：
+
+- 对每个候选需求，列出用“传统规则”和“AI”分别实现的方案；
+- 写清楚 AI 相比规则的 **优势 / 风险 / 成本**。
+
+#### 步骤 2：任务类型与技术路线判断
+
+常见任务类型：
+
+- 检索 / 搜索；
+- 问答 / 对话；
+- 文本生成 / 改写 / 总结；
+- 多步推理 / 工具调用；
+- 分类 / 打标签 / 排序。
+
+对应技术路线（示例）：
+
+| 场景          | 推荐方案          | 理由                          |
+|---------------|-------------------|-------------------------------|
+| FAQ 问答      | Prompt / RAG      | 数据简单，易于落地            |
+| 专业文档问答  | RAG + 大模型      | 需要高准确性与可溯源          |
+| 复杂任务编排  | Agent             | 需要多步推理与工具调用        |
+| 结构化评分    | 规则 / 分类模型   | 可解释性强，易于监控          |
+
+#### 步骤 3：数据与约束分析
+
+产出一份简短的 **《数据与约束分析》**：
+
+- 现有数据：类型、质量、量级；
+- 数据缺口：是否需要采集 / 标注；
+- 合规要求：隐私、敏感信息处理；
+- 非功能性约束：准确率要求、延迟要求、成本上限等。
+
+#### 步骤 4：方案设计（模型 + 产品）
+
+内容包括：
+
+- 模型选型：闭源 API vs 开源本地模型；
+- 能力实现方式：Prompt / RAG / 微调 / Agent；
+- 系统架构草图：前端 → 后端 → 模型服务 → 数据层；
+- 关键交互：输入方式、输出形式、多轮对话策略；
+- 失败兜底方案：失败提示、重试机制、人工接管逻辑。
+
+#### 步骤 5：原型与 MVP 验证
+
+AI 产品原型的特点：
+
+- 不一定先搭完所有界面，可以用“后台工具 + 内部测试”的方式验证；
+- 可以做 **Wizard-of-Oz 测试**（人工扮演 AI）快速试探。
+
+建议产出：
+
+- 一份交互稿 / Demo；
+- 一个用于内部评估的简单 Demo（哪怕是脚本 + Postman）。
+
+#### 步骤 6：评估指标与监控设计
+
+提前定义：
+
+- 技术指标：准确率、召回率、错误率等；
+- 用户体验指标：使用率、满意度、投诉率；
+- 业务指标：人效提升、转化率、收入 / 成本变化。
+
+并设计：
+
+- 日志采集与埋点方案；
+- 关键告警条件（如错误率或延迟突增）。
+
+#### 步骤 7：上线与灰度
+
+- 小流量灰度发布；
+- 按预设指标观察：
+  - 是否达到技术阈值；
+  - 是否带来预期业务收益；
+  - 是否出现严重负面效果（投诉、舆情等）。
+
+#### 步骤 8：迭代闭环
+
+建立固定节奏：
+
+```text
+用户使用 → 日志与数据 → 评估分析 → 模型 / Prompt / 数据 / 产品联合优化 → 再上线
+```
+
+---
+
+### 4.3 数据策略与数据标注
+
+#### 4.3.1 数据 = AI 产品的燃料
+
+经典结论：
+
+> **好数据 + 普通模型 > 普通数据 + 好模型**
+
+AI PM 的数据职责：
+
+- 定义“什么才是好数据”；
+- 设计数据采集与标注策略；
+- 控制数据成本与合规风险。
+
+#### 4.3.2 数据来源与策略
+
+常见来源：
+
+- 业务系统现有数据（日志、对话、反馈等）；
+- 公共数据集；
+- 人工采集（访谈、爬虫、调研）；
+- 合成数据（用模型生成、规则生成）。
+
+关键策略：
+
+- **先定义任务 → 再定义数据需求**（而不是先收一大堆数据）；
+- 关注数据的 **多样性与代表性**，尤其是边界情况；
+- 为每个项目写一份 **《数据筹备方案》**：来源、量级、标注方式、预算。
+
+#### 4.3.3 数据标注与质量
+
+标注任务类型：
+
+- 分类标注（情感、话题等）；
+- 文本生成（写标准答案）；
+- 对话数据（多轮对话）；
+- 偏好打分（在多个回答中选择更好者）。
+
+质量控制手段：
+
+- 多人标注 + 一致性评估；
+- 专家抽检；
+- 使用模型辅助审查（发现明显错误样本）。
+
+#### 4.3.4 数据安全与隐私
+
+AI PM 在数据方面的责任：
+
+- 确保方案符合相关法律法规（如个人信息保护法、GDPR 等）；
+- 在产品侧设计隐私与授权机制（弹窗说明、可撤回、匿名化等）；
+- 推动建立 **数据资产台账**：知道哪些数据被收集、被谁使用、用于何处。
+
+---
+
+### 4.4 模型评估与指标体系
+
+#### 4.4.1 从“好不好”到“值不值”
+
+评估不仅是“模型好不好”，更是：
+
+- 对业务有没有价值；
+- 对体验有没有提升；
+- 成本是否可接受。
+
+#### 4.4.2 技术指标（略）
+
+这里保持简洁：
+
+- 分类任务：准确率、精确率、召回率、F1；
+- 检索任务：召回率、NDCG；
+- 生成任务：BLEU、ROUGE、人工质量打分。
+
+#### 4.4.3 业务指标设计
+
+为每个功能设计一张“模型 → 业务”的映射表，例如智能客服：
+
+| 业务目标       | 技术指标   | 业务指标              |
+|----------------|------------|-----------------------|
+| 降低人工成本   | 识别准确率 | 人工接入率下降       |
+| 提升解决效率   | 回答完整度 | 单次对话平均轮次下降 |
+| 提升用户满意度 | 误答率下降 | 满意度评分提高       |
+
+#### 4.4.4 评估方法：离线 + 在线
+
+- 离线评估：用标注好的测试集，快速验证模型改动方向是否正确；
+- 在线评估：A/B 测试、灰度发布，在真实流量中验证效果。
+
+AI PM 的工作：
+
+- 与算法共同确定评估集与评估方式；
+- 联合数据同学设计 A/B 方案与统计口径；
+- 最终根据技术 + 业务双指标做决策：是否全量发布、是否继续迭代。
+
+---
+
+### 4.5 可演进性设计
+
+#### 4.5.1 为什么 AI 产品特别需要“可演进”
+
+原因：
+
+- 模型会频繁升级；  
+- 数据会持续积累；  
+- 新能力（如多模态、长上下文）不断出现。
+
+如果一开始没有设计好可演进性，很容易出现：
+
+- 每次模型换版本，全链路改动、风险极高；
+- 旧数据无法复用；
+- 没有灰度与回滚机制。
+
+#### 4.5.2 模型与业务解耦
+
+设计统一的 **Model Client 层**：
+
+- 上层业务只关心：`input → output`；
+- 下层可以按需切换 GPT/Claude/本地模型等；
+- 支持按用户 / 实验分流到不同模型版本。
+
+#### 4.5.3 版本管理与灰度
+
+基本能力：
+
+- 同时在线多个模型版本；
+- 支持按照用户 / 请求特征路由；
+- 一键回滚；
+- 版本级别的日志与评估。
+
+#### 4.5.4 监控与告警
+
+监控维度：
+
+- 延迟、错误率、调用频次；
+- 回答长度、拒绝率（过度保守）；
+- 业务指标（转化、满意度等）。
+
+出现异常波动时：
+
+- 自动告警；
+- 必要时自动降级或回滚。
+
+---
+
+### 4.6 AI 产品的用户体验设计
+
+#### 4.6.1 与传统 UX 的本质差异
+
+- 输出是 **概率性的**，不再 100% 可控；
+- 错误是 **常态**，必须在设计中正视和拥抱；
+- 交互从“点点点”变成“说话 / 写字”。
+
+#### 4.6.2 四个核心设计原则
+
+1. **设定合理预期**：清楚地告诉用户“能做什么、不能做什么”；  
+2. **拥抱不确定性**：允许多候选、允许用户编辑和修正；  
+3. **重视失败体验**：错误提示要诚实、有帮助，有退路；  
+4. **增强信任感**：来源可追溯、逻辑可解释、行为可控。
+
+---
+
+### 4.7 能力矩阵、协作模式与学习路径
+
+本节可作为自我评估与成长规划工具，内容略写，重点是：
+
+- 定义自己在“AI 认知 / 需求转化 / 数据意识 / 评估 / Prompt / 架构 / 趋势判断 / 协作沟通”八个维度的当前水平；
+- 结合实际工作，为每个维度设一年内的具体提升目标；
+- 在团队中推动更健康的协作模式：  
+  PM 负责需求与业务、算法负责模型与评估、工程负责系统与性能、数据负责数据与报表。
+
+---
+
+## 五、模块三：Agent 智能体与设计模式
+
+> 目标：从“对话机器人”升级到“会自己执行任务的 AI 助手”。
+
+### 5.1 Agent 的产品定义
+
+- **一句话**：Agent = LLM + 记忆 + 工具 + 行为策略。
+- 与“普通对话机器人”的区别：
+  - 不只是回答问题，而是 **理解目标 → 规划步骤 → 调用工具 → 校验 → 决策**。
+
+### 5.2 典型 Agent 设计模式
+
+#### 5.2.1 ReAct（推理 + 行动）
+
+流程：
+
+1. 想（Reason）：思考当前信息需要做什么；
+2. 行（Act）：调用工具（搜索、数据库、API）；
+3. 观（Observe）：观察工具返回结果；
+4. 再想再行，直到达到目标。
+
+适用场景：
+
+- 需要外部信息支持的决策任务；
+- 多步工具调用任务。
+
+#### 5.2.2 Plan-and-Execute（先规划，再执行）
+
+流程：
+
+1. 规划：生成一个多步计划（任务拆解）；
+2. 执行：按计划逐步执行，并在过程中调整。
+
+适用场景：
+
+- 任务明确、步骤较清晰；
+- 需要用户对中间过程有一定可见性。
+
+#### 5.2.3 多 Agent 协作
+
+模式：
+
+- 规划 Agent：拆分任务；
+- 执行 Agent：调用工具、完成子任务；
+- 评估 / 审核 Agent：检查结果质量，必要时重试。
+
+适用场景：
+
+- 复杂流程、责任需要拆分；
+- 需要不同“角色”视角的场景（如律师、财务、运营等）。
+
+---
+
+### 5.3 Agent 的产品设计要点
+
+#### 5.3.1 任务建模
+
+先回答几个问题：
+
+- 用户真正的目标是什么（Goal）？
+- 任务可以拆分为哪些步骤（Subtasks）？
+- 哪些步骤需要外部工具（Tool），哪些需要人来判断？
+
+#### 5.3.2 工具编排（Tool Use）
+
+对每个工具，都要定义清楚：
+
+- 工具职责与边界；
+- 输入 / 输出格式；
+- 超时与失败处理；
+- 安全限制（如禁止直接执行高风险操作）。
+
+#### 5.3.3 记忆与状态管理
+
+- 短期记忆：本次会话中的上下文；
+- 长期记忆：跨会话的用户偏好、历史记录；
+- 产品需要决定：
+  - 记什么、不记什么；
+  - 如何告知与让用户管理自己的数据（隐私与控制权）。
+
+#### 5.3.4 可视化与可解释性
+
+- 对用户展示适当的“思考过程”；
+- 对关键步骤给出可视化的“任务进度条”；
+- 对关键决策节点，给用户“确认 / 撤销”的能力。
+
+---
+
+### 5.4 RAG（检索增强生成）
+
+#### 5.4.1 问题背景
+
+大模型的幻觉、知识时效性和企业私有知识接入问题，催生了 RAG：
+
+- Retrieval-Augmented Generation：  
+  让模型在生成前，先从外部知识库检索相关内容。
+
+#### 5.4.2 RAG 基本架构
+
+1. 文档入库：清洗 → 切分 → 向量化 → 存入向量数据库；
+2. 查询阶段：
+   - 将用户问题向量化；
+   - 在向量库中检索相似文本；
+   - 将检索结果与问题一起送入 LLM；
+3. LLM 基于检索的真实资料生成回答。
+
+#### 5.4.3 产品设计要点
+
+- 切分粒度：按段落 / 章节 / 语义块；要在“足够完整”和“足够精细”之间平衡；
+- 呈现方式：
+  - 回答中给出引用标记；
+  - 提供“原文链接”、“展开全文”的入口；
+- 监控指标：
+  - 检索命中率；
+  - 用户点击引用率；
+  - 用户对回答的评分。
+
+---
+
+### 5.5 提示工程（Prompt Engineering）
+
+#### 5.5.1 从“技巧”升级为“产品能力”
+
+提示工程不仅是写文案的小技巧，而是：
+
+- 定义模型“角色”、“任务”、“边界”的一种配置方式；
+- 很多时候是 **AI 功能本身** 的实现手段。
+
+#### 5.5.2 常见 Prompt 结构
+
+- 角色设定（Role）；
+- 任务描述（Task）；
+- 背景上下文（Context）；
+- 输出约束（Constraints）；
+- 示例（Examples / Few-shot）；
+- 输出格式（Output Format）。
+
+#### 5.5.3 Prompt 模板化与管理
+
+建议在团队中建立：
+
+- Prompt 模板库（按场景分类）；
+- 版本管理（迭代记录与效果对比）；
+- 与 AB 测试结合，持续优化 Prompt。
+
+---
+
+## 六、模块四：大模型技术细节（PM 需要的技术深度）
+
+> 目标：你不是要自己写代码训练模型，但要“看得懂架构图、听得懂技术讨论、做得出合理决策”。
+
+### 6.1 微调方法概览
+
+#### 6.1.1 全参数微调（Full Fine-tuning）
+
+- 对模型所有参数进行更新；
+- 效果好，但成本极高；
+- 一般只有在非常重要的场景、且有充足数据与算力时采用。
+
+#### 6.1.2 参数高效微调（PEFT）
+
+- 常见方法：LoRA、Prefix Tuning、Adapter 等；
+- 思路：只训练少量附加参数，原模型参数固定；
+- 优点：成本低、易于部署多版本；
+- 适合中小团队、初创公司。
+
+产品经理要能判断：
+
+- 这个场景是否 **值得** 为其单独训练一个 LoRA / 适配器；
+- 训练后的模型部署与维护成本是否可控。
+
+---
+
+### 6.2 训练与推理的工程视角
+
+#### 6.2.1 分布式训练的基本概念
+
+- 数据并行（Data Parallel）：不同机器处理不同数据；
+- 模型并行（Model Parallel）：不同机器存模型不同部分；
+- 混合并行与 ZeRO 等优化策略。
+
+你只需在评估供应商或方案时，会问：
+
+- 该方案对硬件 / 基础设施有什么要求；
+- 扩容与成本曲线是怎样的。
+
+#### 6.2.2 推理服务架构（高层）
+
+典型结构：
+
+```text
+用户请求 → API 网关 → 推理服务（负载均衡） → 模型权重（GPU/CPU）
+                               ↓
+                         日志 & 监控系统
+```
+
+PM 需要关注：
+
+- 延迟表现与峰值负载；
+- 是否支持多模型 / 多版本；
+- 日志是否足够详细以支持后续评估。
+
+---
+
+### 6.3 向量数据库与知识库
+
+#### 6.3.1 为什么需要向量数据库？
+
+传统关键词检索（倒排索引）的问题：
+
+- 无法很好处理语义相似但词不相同的情况；
+- 难以应对长文本、高维语义。
+
+向量数据库的优势：
+
+- 通过向量相似度（如余弦距离）进行检索，更贴近语义；
+- 适合作为 RAG 的底层基础设施。
+
+#### 6.3.2 选型考量
+
+- 数据规模与 QPS；
+- 延迟要求；
+- 团队技术栈（如是否已有 PostgreSQL，可用 pgvector）；
+- 商业化方案 vs 自建方案的性价比。
+
+---
+
+### 6.4 评测体系与质量管控（技术 + 产品结合）
+
+除了前面提到的技术指标与在线 A/B，还可以注意：
+
+- **自动化评测**：用 LLM 做评委（LLM-as-a-judge）；
+- **红队测试**：
+  - 使用越狱提示词测试模型安全性；
+  - 针对敏感话题（政治、诈骗、隐私等）设计测试集；
+- **持续评估**：
+  - 每次模型 / Prompt / RAG 配置变更都要有一轮基础评测；
+  - 形成“变更 → 评估 → 报告”的标准流程。
+
+---
+
+## 七、模块五：行业应用与实战案例
+
+> 目标：把理论落到行业场景，形成“看到需求就能联想到技术方案”的能力。
+
+### 7.1 通用型场景
+
+- 办公与知识工作（Copilot 类）；
+- 客服 / 销售 / 运营助手；
+- 文案生成与创意工具；
+- 代码辅助与研发效能。
+
+每个场景都可以从三点来拆解：
+
+1. 用户的核心痛点；
+2. AI 能力解决什么，不能解决什么；
+3. 最小可行产品（MVP）可以是什么。
+
+### 7.2 行业深度场景（示意）
+
+可以结合你已有的行业报告，分别写成 1–2 页的行业小结，例如：
+
+- 金融：智能投顾、风控、反洗钱、报告生成等；
+- 医疗：病例摘要、辅助诊断（需强监管）、随访助手等；
+- 制造：质量检测（多模态）、设备预测性维护等；
+- 教育：个性化练习、作业批改、学习路径推荐等。
+
+每个行业关注：
+
+- 行业监管和合规边界；
+- 数据类型与获取难度；
+- 典型 KPI 与 ROI 计算方式。
+
+---
+
+## 八、模块六：面试准备与职业发展
+
+### 8.1 高频面试题框架
+
+可以把市面上的“AI PM 高频 100 题”按以下维度整理：
+
+1. **基础理论类**：解释 LLM、Transformer、微调、RAG、RLHF 等；
+2. **产品设计类**：如何设计某个 AI 功能、评估指标、失败兜底等；
+3. **数据与评估类**：怎么准备数据、如何评估模型效果；
+4. **架构与演进类**：如何保证可扩展性、可演进性；
+5. **行业理解类**：对某个行业的 AI 落地看法；
+6. **项目经验类**：讲述你做过的 AI 项目。
+
+### 8.2 项目故事模板
+
+建议至少准备 2–3 个完整的 AI 项目故事，每个故事围绕：
+
+1. 背景与目标；
+2. 你是如何判断“需要用 AI 而不是传统方案”的；
+3. 你如何做方案设计（模型 / 数据 / 产品 / 评估）；
+4. 落地过程中的关键挑战与解决方案；
+5. 结果与复盘（包括失败的地方和教训）。
+
+### 8.3 职业路径与持续学习
+
+- 短期目标（1 年内）：
+  - 至少从 0–1 负责一个 AI 功能或子产品；
+  - 在团队内建立基础 AI 评估 / 数据 / Prompt 管理流程；
+  - 补齐理论短板（本手册中的模块一与模块二）。
+- 中期目标（3 年）：
+  - 负责一条 AI 产品线；
+  - 带团队做多行业或多场景的 AI 解决方案；
+  - 形成自己的方法论并对外输出（分享、文章、课程等）。
+
+---
+
+## 九、结语：如何让这本手册真正“长在你身上”
+
+1. **从实战反推理论**：  
+   每当遇到一个新问题，想想它在本手册的哪个章节里；  
+   如果找不到对应章节，就给这本手册“加一节”。
+
+2. **把“会用 AI”变成“用 AI 做出业务成果”**：  
+   不要停留在“玩工具”、写几句 Prompt；  
+   永远追问：**这件事给用户带来了什么价值？给业务带来了什么结果？**
+
+3. **定期复盘 & 版本迭代**：  
+   建议每 3–6 个月，重新通读这本手册，并结合你新的项目经验，  
+   更新其中的案例、认知和决策框架，让它真正成为你的“AI 产品操作系统”。
+
+> 未来可以继续扩展的方向：  
+> - 多模态（图像、语音、视频）相关章节；  
+> - 更细分的行业解决方案手册；  
+> - Agent 实战案例与设计模式专册等。
+  </script>
+
+  <script>
+    (function () {
+      const src = document.getElementById('md-source').textContent;
+      // 自定义一点点渲染选项
+      marked.setOptions({
+        breaks: true,
+        gfm: true
+      });
+      const html = marked.parse(src);
+      const contentEl = document.getElementById('content');
+      contentEl.innerHTML = html;
+
+      // 自动生成顶部小目录（提取 h2）
+      const headings = contentEl.querySelectorAll('h2');
+      const tocEl = document.getElementById('toc');
+      if (headings.length) {
+        const ul = document.createElement('ul');
+        headings.forEach((h, idx) => {
+          if (!h.id) {
+            h.id = 'section-' + (idx + 1);
+          }
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = '#' + h.id;
+          a.textContent = h.textContent.replace(/^\d+、?/, '').trim();
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+        tocEl.innerHTML = '<strong>快速跳转</strong>';
+        tocEl.appendChild(ul);
+      } else {
+        tocEl.style.display = 'none';
+      }
+
+      // 生成左侧侧边栏课程目录（h2 + 其下的 h3）
+      const sidebarNav = document.getElementById('sidebar-nav');
+      if (sidebarNav && headings.length) {
+        const list = document.createElement('ul');
+        list.className = 'sidebar-nav';
+
+        headings.forEach((h2, index) => {
+          const sectionId = h2.id || ('section-' + (index + 1));
+          h2.id = sectionId;
+
+          const sectionLi = document.createElement('li');
+          sectionLi.className = 'sidebar-nav-section';
+
+          const headerBtn = document.createElement('button');
+          headerBtn.className = 'sidebar-section-header';
+          const titleSpan = document.createElement('span');
+          titleSpan.textContent = h2.textContent;
+          const countSpan = document.createElement('small');
+          countSpan.textContent = '章节';
+          const chevSpan = document.createElement('span');
+          chevSpan.className = 'chevron';
+          chevSpan.textContent = '▾';
+          headerBtn.appendChild(titleSpan);
+          headerBtn.appendChild(countSpan);
+          headerBtn.appendChild(chevSpan);
+
+          const subList = document.createElement('ul');
+          subList.className = 'sidebar-links';
+
+          // 收集当前 h2 到下一个 h2 之间的 h3、h4 作为小节（h4 作为 h3 的子级展示）
+          let el = h2.nextElementSibling;
+          let hasSub = false;
+          while (el && el.tagName !== 'H2') {
+            if (el.tagName === 'H3') {
+              hasSub = true;
+              const subId = el.id || (sectionId + '-sub-' + subList.children.length);
+              el.id = subId;
+              const li = document.createElement('li');
+              const a = document.createElement('a');
+              a.href = '#' + subId;
+              a.textContent = el.textContent;
+              li.appendChild(a);
+              subList.appendChild(li);
+            } else if (el.tagName === 'H4') {
+              hasSub = true;
+              const subId = el.id || (sectionId + '-h4-' + subList.children.length);
+              el.id = subId;
+              const li = document.createElement('li');
+              li.className = 'sidebar-h4';
+              const a = document.createElement('a');
+              a.href = '#' + subId;
+              a.textContent = el.textContent;
+              li.appendChild(a);
+              subList.appendChild(li);
+            }
+            el = el.nextElementSibling;
+          }
+
+          if (!hasSub) {
+            // 如果没有 h3，小节，就直接把 h2 作为可点击链接
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = '#' + sectionId;
+            a.textContent = '查看本章';
+            li.appendChild(a);
+            subList.appendChild(li);
+          }
+
+          // 展开 / 收起逻辑，点击章节标题时同时滚动到对应位置
+          headerBtn.addEventListener('click', () => {
+            const isHidden = subList.style.display === 'none';
+            subList.style.display = isHidden ? 'block' : 'none';
+            chevSpan.textContent = isHidden ? '▾' : '▸';
+            const dest = document.getElementById(sectionId);
+            if (dest) {
+              dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+
+          sectionLi.appendChild(headerBtn);
+          sectionLi.appendChild(subList);
+          list.appendChild(sectionLi);
+        });
+
+        sidebarNav.appendChild(list);
+
+        // 侧边栏点击平滑滚动
+        sidebarNav.addEventListener('click', (e) => {
+          const target = e.target;
+          if (target.tagName === 'A') {
+            e.preventDefault();
+            const id = target.getAttribute('href').slice(1);
+            const dest = document.getElementById(id);
+            if (dest) {
+              window.scrollTo({
+                top: dest.getBoundingClientRect().top + window.scrollY - 80,
+                behavior: 'smooth'
+              });
+            }
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
+
