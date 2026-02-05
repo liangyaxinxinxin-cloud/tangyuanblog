@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>汤圆 · AI 产品经理与智能体实践</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #020617;
+      --bg-soft: #020617;
+      --fg: #e5e7eb;
+      --muted: #94a3b8;
+      --border: #1f2937;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+      --accent-strong: #0ea5e9;
+      --chip-bg: rgba(15, 23, 42, 0.9);
+      --card-bg: radial-gradient(circle at 0% 0%, #0b1220, #020617 55%);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #0f172a 0, #020617 42%, #020617 100%);
+      color: var(--fg);
+      min-height: 100vh;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.3));
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .site-header-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+    .logo-mark {
+      width: 22px;
+      height: 22px;
+      border-radius: 8px;
+      background:
+        conic-gradient(from 220deg, #22d3ee, #0ea5e9, #a855f7, #f97316, #22d3ee);
+      box-shadow:
+        0 0 0 1px rgba(248, 250, 252, 0.35),
+        0 10px 26px rgba(15, 23, 42, 0.8);
+    }
+    .logo-sub {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+    .nav {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      color: var(--muted);
+    }
+    .nav a {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: all 0.18s ease-out;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .nav a:hover {
+      border-color: rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+    }
+    .nav a.primary {
+      border-color: rgba(56, 189, 248, 0.6);
+      background: linear-gradient(to right, rgba(56, 189, 248, 0.16), rgba(59, 130, 246, 0.1));
+      color: #e0f2fe;
+    }
+    main {
+      flex: 1;
+    }
+    .hero {
+      max-width: 1040px;
+      margin: 36px auto 28px;
+      padding: 0 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(260px, 2.4fr);
+      gap: 32px;
+      align-items: center;
+    }
+    .hero-left-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px 3px 3px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.9));
+      color: #e0f2fe;
+      font-size: 11px;
+      margin-bottom: 14px;
+    }
+    .hero-left-eyebrow-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #22c55e, #16a34a);
+      box-shadow:
+        0 0 0 1px rgba(34, 197, 94, 0.7),
+        0 0 14px rgba(34, 197, 94, 0.9);
+    }
+    .hero-title {
+      font-size: clamp(28px, 4vw, 36px);
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      font-weight: 650;
+      margin: 0 0 14px;
+    }
+    .hero-highlight {
+      background: linear-gradient(to right, #38bdf8, #a855f7, #fb923c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 34rem;
+      margin-bottom: 18px;
+    }
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 11px;
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #38bdf8;
+    }
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .btn {
+      border-radius: 999px;
+      padding: 7px 14px;
+      border: 1px solid transparent;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: default;
+    }
+    .btn-primary {
+      background: linear-gradient(to right, #0ea5e9, #22c55e);
+      color: #ecfeff;
+      box-shadow:
+        0 0 0 1px rgba(15, 23, 42, 0.85),
+        0 12px 30px rgba(8, 47, 73, 0.75);
+      font-weight: 600;
+    }
+    .btn-outline {
+      border-color: rgba(148, 163, 184, 0.8);
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.85);
+    }
+    .hero-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .hero-right-card {
+      position: relative;
+      border-radius: 22px;
+      padding: 16px 16px 14px;
+      background: radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.16), rgba(15, 23, 42, 0.96) 46%, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow:
+        0 24px 80px rgba(15, 23, 42, 0.92),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+    }
+    .hero-right-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .hero-right-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #bae6fd;
+    }
+    .hero-right-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--muted);
+    }
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .skill-chip {
+      padding: 7px 8px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      font-size: 11px;
+      color: #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .skill-chip-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+    .skill-chip-label span:first-child {
+      font-weight: 500;
+    }
+    .skill-chip-label span:last-child {
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .skill-chip-desc {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .skill-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .skill-pill {
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 10px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: #cbd5f5;
+    }
+    .hero-right-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--muted);
+      border-top: 1px dashed rgba(148, 163, 184, 0.45);
+      padding-top: 8px;
+      margin-top: 4px;
+    }
+    .hero-right-footer span strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+    .section {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 2px 18px 24px;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+    .section-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .timeline {
+      position: relative;
+      padding-left: 16px;
+      border-left: 1px dashed rgba(148, 163, 184, 0.5);
+    }
+    .timeline-item {
+      position: relative;
+      padding: 10px 0 6px 4px;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -10px;
+      top: 14px;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #38bdf8;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.16);
+    }
+    .timeline-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .timeline-tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      font-size: 10px;
+      color: #e5e7eb;
+    }
+    .timeline-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+    .timeline-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .timeline-desc strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      border-radius: 16px;
+      padding: 12px 12px 10px;
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .card-tag {
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .card-body {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .card-list {
+      margin: 6px 0 0;
+      padding-left: 16px;
+    }
+    .card-list li {
+      margin-bottom: 3px;
+    }
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .contact-pill {
+      border-radius: 999px;
+      padding: 4px 9px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+    }
+    footer {
+      border-top: 1px solid rgba(30, 64, 175, 0.5);
+      margin-top: 10px;
+    }
+    .footer-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 10px 18px 14px;
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    @media (max-width: 768px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        margin-top: 22px;
+      }
+      .site-header-inner {
+        padding-inline: 14px;
+      }
+      .section {
+        padding-inline: 14px;
+      }
+      .grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div class="logo">
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span>tangyuan.blog</span>
+          <span class="logo-sub">AI 产品经理 · 智能体实践</span>
+        </div>
+        <nav class="nav">
+          <a href="#skills">AI 能力矩阵</a>
+          <a href="#projects">代表项目</a>
+          <a href="#timeline">近年经历</a>
+          <a href="#contact" class="primary">合作与交流</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <div class="hero-left-eyebrow">
+            <span class="hero-left-eyebrow-dot"></span>
+            <span>产品经理 · 对 AI 有强兴趣的自驱型学习者</span>
+          </div>
+          <h1 class="hero-title">
+            汤圆 · <span class="hero-highlight">产品经理 / AI 自主学习实践者</span>
+          </h1>
+          <p class="hero-subtitle">
+            职业上是一名互联网产品经理，核心能力仍然在 <strong>需求洞察、体验设计、数据驱动迭代</strong>；
+            同时对 AI 有强兴趣，近几年利用业余时间系统自学大模型相关知识，
+            并在飞鹤等工作场景中尝试把 <strong>Cursor / Claude / Gemini</strong> 与日常业务结合。
+          </p>
+          <div class="hero-pills">
+            <span class="pill"><span class="pill-dot"></span>深度使用 Cursor / Claude / Gemini</span>
+            <span class="pill">搭建多步骤智能体 & 工作流</span>
+            <span class="pill">善用 Skills / 函数调用 / API 工具链</span>
+            <span class="pill">AI 产品规划 · 评估 · 落地节奏</span>
+          </div>
+          <div class="hero-cta-row">
+            <button class="btn btn-primary" type="button">
+              当前定位：产品经理本职 + 业余自学 AI / 智能体 + 在实际工作中「小范围尝试」
+            </button>
+            <div class="hero-meta">
+              希望让简历阅读者看到：我不是 AI 专家，但长期在认真学习和实践，已经能独立搭起个人工作流和简单智能体。
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-right-card" aria-label="AI 能力快照">
+          <div class="hero-right-header">
+            <div class="hero-right-title">AI SKILL SNAPSHOT</div>
+            <div class="hero-right-tag">2023 – 2026 · 以自学与实践为主</div>
+          </div>
+          <div class="skill-grid">
+            <div class="skill-chip">
+              <div class="skill-chip-label">
+                <span>AI 工具链自学实践</span>
+                <span>Cursor / Claude / Gemini</span>
+              </div>
+              <div class="skill-chip-desc">
+                主要在 <strong>个人学习与部分工作场景</strong> 中把大模型当「搭档」使用，
+                用 <strong>Cursor / Claude / Gemini</strong> 辅助做调研、文档、方案推演与轻量代码尝试。
+              </div>
+            </div>
+            <div class="skill-chip">
+              <div class="skill-chip-label">
+                <span>智能体与工作流</span>
+                <span>Agent / Orchestration</span>
+              </div>
+              <div class="skill-chip-desc">
+                在阅读大量 Agent / 工作流资料的基础上，尝试把自己的高频任务拆成<span>多步骤工作流</span>与<span>简单多角色智能体</span>，
+                目前主要应用在「个人知识整理」「文档写作」而非大规模线上业务。
+              </div>
+            </div>
+            <div class="skill-chip">
+              <div class="skill-chip-label">
+                <span>Skill 设计</span>
+                <span>工具调用 & API</span>
+              </div>
+              <div class="skill-chip-desc">
+                已经可以理解并动手配置 <strong>Skills / 函数调用</strong> 的基本思路，
+                会在可用的平台里把文档、知识库和简单 API 封装成工具，让模型在有限边界内「帮忙做事」。
+              </div>
+            </div>
+            <div class="skill-chip">
+              <div class="skill-chip-label">
+                <span>AI 产品方法论</span>
+                <span>从 0 到 1</span>
+              </div>
+              <div class="skill-chip-desc">
+                在已有产品经验的基础上，逐步摸索适合自己的：<strong>机会识别 → 方案设计 → 小步试验 → 数据评估 → 持续迭代</strong> 的 AI 功能推进节奏，
+                目前仍处在「不断试、不断修正」阶段。
+              </div>
+            </div>
+          </div>
+          <div class="skill-pill-row">
+            <span class="skill-pill">对话式产品 & Co-pilot 场景</span>
+            <span class="skill-pill">RAG / 知识库型助手设计</span>
+            <span class="skill-pill">流程自动化 · 多工具协同</span>
+            <span class="skill-pill">面向非技术同事的 AI 赋能</span>
+          </div>
+          <div class="hero-right-footer">
+            <span>当前探索方向：<strong>让更多普通人通过「个人 AI 作业系统」提升 10 倍效率</strong></span>
+            <span>用 AI 做事，而不只是跟 AI 聊天。</span>
+          </div>
+        </aside>
+      </section>
+
+      <section id="resume" class="section">
+        <header class="section-header">
+          <div class="section-title">简历概览</div>
+          <div class="section-sub">先快速说明「我是谁、之前做什么、现在怎么学和用 AI」。</div>
+        </header>
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">职业主线 · 增长 & 会员体系产品</h2>
+              <span class="card-tag">腾讯视频 → 高途 → 京东 → 飞鹤</span>
+            </div>
+            <div class="card-body">
+              <ul class="card-list">
+                <li>过往一直在互联网一线做 <strong>用户增长 / 会员体系 / 激励与留存</strong> 相关产品，覆盖长视频、在线教育、电商、婴配粉等行业。</li>
+                <li>有从 0-1 搭建产品能力（如成长体系、积分玩法、会员权益、用户触达体系）的经验，也有在亿级用户体量下迭代核心能力的经历。</li>
+                <li>飞鹤阶段聚焦「婴配粉新客增长 + 会员体系 + 用户触达」，京东阶段聚焦「会员与积分成长体系 + 用户增长活动」。</li>
+                <li>整体来说，我是一个以业务结果和数据驱动为导向的<strong>增长向产品经理</strong>，这也是我看待 AI 的底层视角。</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">AI 相关 · 在职应用 + 自主学习</h2>
+              <span class="card-tag">飞鹤 HiAgent 实战 + 个人学习项目</span>
+            </div>
+            <div class="card-body">
+              <ul class="card-list">
+                <li>在飞鹤负责用户增长与会员项目时，参与基于 <strong>HiAgent</strong> 搭建「AI 导购助手 / 智能运营助手」智能体，是目前唯一明确写入简历的 AI 在职项目。</li>
+                <li>除此之外的 AI 能力，主要来自于业余时间的系统学习与个人实践：整理《AI 产品经理理论知识手册》等文档，规划自己的 AI 学习路线。</li>
+                <li>熟悉并日常使用 <strong>Cursor / Claude / Gemini</strong> 等工具，更多作为「效率搭档」而非职位本身；已经能搭建个人工作流、简单智能体与知识库结构。</li>
+                <li>未来希望在不夸大经验的前提下，把「产品增长经验 + AI 工具与智能体」结合起来，探索更实在的落地场景。</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="skills" class="section">
+        <header class="section-header">
+          <div class="section-title">AI 能力矩阵</div>
+          <div class="section-sub">来自《AI 产品经理理论知识手册》等笔记的提炼与重组。</div>
+        </header>
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">工具与工程实践</h2>
+              <span class="card-tag">「和模型一起工作」的日常技能</span>
+            </div>
+            <div class="card-body">
+              <ul class="card-list">
+                <li>在本职产品工作之外，出于兴趣持续自学 <strong>Cursor / Claude / Gemini / HiAgent</strong> 等 AI 工具，并尝试融入日常工作与生活。</li>
+                <li>能使用 <strong>Cursor</strong> 做文档结构梳理、简单代码实验；用 <strong>Claude / Gemini</strong> 做调研、拆解复杂问题、写作与知识管理。</li>
+                <li>能够为不同任务选择合适模型，并通过 <strong>角色设定、思维链</strong> 等方式提高稳定性。</li>
+                <li>对 Prompt 设计、上下文管理、系统提示（System Prompt）有系统化方法，而不是一次性临时发挥。</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">智能体 · 工作流设计</h2>
+              <span class="card-tag">从「一次性对话」到「可复用系统」</span>
+            </div>
+            <div class="card-body">
+              <ul class="card-list">
+                <li>能把业务流程拆解成 <strong>多步骤流水线</strong>，为每一步定义清晰输入 / 输出与质量标准。</li>
+                <li>设计 <strong>多角色智能体</strong>（如：研究助手、评审官、编辑器）协同完成复杂任务。</li>
+                <li>为智能体规划 <strong>记忆、工具访问权限、安全边界和失败兜底策略</strong>。</li>
+                <li>在团队里沉淀「可复用工作流」，而不是一次性用完就丢的 Prompt。</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">Skills / 工具调用</h2>
+              <span class="card-tag">让模型真正「做事」</span>
+            </div>
+            <div class="card-body">
+              <ul class="card-list">
+                <li>能够基于现有平台（如 Cursor / Claude / 其它 Agent 框架）<strong>配置与编排 Skills</strong>。</li>
+                <li>擅长把业务系统、知识库、第三方 API 封装成 <strong>可调用工具</strong>，供模型在对话中灵活使用。</li>
+                <li>理解工具调用的 <strong>幂等性、安全性与错误处理</strong>，能设计出稳定的「人机共舞」流程。</li>
+                <li>善于用小型实验验证某个 Skill 是否真的节省了人力时间。</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">AI 产品思维</h2>
+              <span class="card-tag">从概念到可用产品</span>
+            </div>
+            <div class="card-body">
+              <ul class="card-list">
+                <li>熟悉 AI 产品从 <strong>机会洞察 → 场景选择 → 方案设计 → MVP 验证 → 上线运营</strong> 的全链路。</li>
+                <li>对 RAG、多轮对话、个性化助手等主流形态有清晰的优缺点判断。</li>
+                <li>擅长把「技术可能性」转成 <strong>用户看得懂、愿意用</strong> 的产品价值主张。</li>
+                <li>能够为 AI 功能设计 <strong>可落地的评估指标</strong>：如节省时间、错误率、满意度等。</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="projects" class="section">
+        <header class="section-header">
+          <div class="section-title">代表性实践（示例化描述）</div>
+          <div class="section-sub">以下主要是「业余自学 + 在飞鹤等工作中的局部尝试」，没有夸大为完整 AI 项目。</div>
+        </header>
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">飞鹤 · AI 导购助手智能体（在职实践）</h2>
+              <span class="card-tag">基于 HiAgent 的智能运营助手</span>
+            </div>
+            <div class="card-body">
+              <ul class="card-list">
+                <li>在飞鹤数智增长中心任职期间，基于 <strong>HiAgent</strong> 平台参与搭建「AI 导购助手 / 智能运营助手」智能体。</li>
+                <li>围绕导购的经营数据和客户情况，设计输出运营日报、重点客户名单、运营素材推荐、经营数据看板、智能问答等能力。</li>
+                <li>在项目中主要贡献在于：梳理业务诉求、抽象智能体能力边界、设计数据与提示词结构，并与技术同学协作完成落地。</li>
+                <li>这也是目前简历中唯一一段明确写入的 AI 相关在职项目，其余岗位以传统增长 / 会员 / 激励体系产品为主。</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">个人 AI 学习路线与知识库整理（兴趣驱动）</h2>
+              <span class="card-tag">从碎片资料到个人认知体系</span>
+            </div>
+            <div class="card-body">
+              <ul class="card-list">
+                <li>出于兴趣持续收集课程 / 电子书 / 报告，尝试搭建适合自己的 <strong>AI 产品经理知识地图</strong>。</li>
+                <li>借助大模型完成「初稿生成 → 自己复盘改写 → 再让模型校对」的多轮加工，但最终观点与结构仍由自己把控。</li>
+                <li>将内容按「基础理论 / 工具实战 / 行业案例 / 面试准备」等维度重新整理，方便后续查找与更新。</li>
+                <li>《AI 产品经理理论知识手册》等文档，都是在本职工作之外，基于兴趣和职业发展的长期学习成果。</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="timeline" class="section">
+        <header class="section-header">
+          <div class="section-title">近几年与 AI 相关的学习与实践</div>
+          <div class="section-sub">区分「本职工作中的部分应用」与「业余时间的自学与个人项目」。</div>
+        </header>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-meta">
+              <span>2025 – 2026</span>
+              <span class="timeline-tag">自学加深期</span>
+            </div>
+            <div class="timeline-title">围绕 Agent / 工作流的系统化自学与尝试</div>
+            <p class="timeline-desc">
+              在保证本职产品工作为主的前提下，更多地把 <strong>Cursor + Claude + Gemini</strong> 融入日常：
+              用它们做学习规划、文档写作、知识整理，并开始为个人任务设计简单的多步骤工作流和智能体组合，
+              这部分以「个人效率提升与认知建设」为主。
+            </p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-meta">
+              <span>2023 – 2024</span>
+              <span class="timeline-tag">系统学习期 + 在飞鹤等场景中的初步落地</span>
+            </div>
+            <div class="timeline-title">大模型基础 · RAG · AI 产品思维</div>
+            <p class="timeline-desc">
+              大量阅读与整理 <strong>大模型原理、RAG、微调、AI 产品方法论</strong> 相关资料，
+              在个人时间里形成自己的学习笔记与总结（例如当前整理的 AI 产品经理资料合集）。
+              同时在飞鹤等工作经历中，尝试将部分 AI 能力用于调研、文案辅助、数据分析思路梳理等，
+              属于「有应用，但规模不大、持续探索中」的阶段。
+            </p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-meta">
+              <span>更早之前</span>
+              <span class="timeline-tag">产品通识积累</span>
+            </div>
+            <div class="timeline-title">传统互联网产品经验 → 向 AI 方向迁移</div>
+            <p class="timeline-desc">
+              主要从事传统互联网产品工作，打磨了 <strong>需求洞察、交互与体验、数据驱动迭代</strong> 等通用能力。
+              随着大模型兴起，出于兴趣开始关注 AI，并逐步系统思考「如何让这些经验在 AI 时代继续发挥作用」，
+              这也是现在持续自学与实践 AI 的背景与基础。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section">
+        <header class="section-header">
+          <div class="section-title">合作与交流</div>
+          <div class="section-sub">如果你也在探索如何用 AI 改造个人与团队的工作方式，欢迎联系我。</div>
+        </header>
+        <div class="contact-row">
+          <span class="contact-pill">可聊话题：AI 产品规划 / 智能体设计 / 个人工作流改造</span>
+          <span class="contact-pill">也欢迎一起交流：AI 学习路线 · 面试准备 · 知识管理</span>
+          <!-- 你可以在下面补充自己的具体联系方式，例如邮箱 / 微信 / Telegram 等 -->
+          <!-- 示例：<span class="contact-pill">邮箱：yourname@example.com</span> -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>© <span id="year"></span> tangyuan · AI 产品经理与智能体实践</span>
+        <span>本页基于个人学习笔记（包括《AI 产品经理理论知识手册》等）重新整理与提炼。</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
