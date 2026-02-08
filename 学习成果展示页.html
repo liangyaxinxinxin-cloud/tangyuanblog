@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>汤圆 · AI 学习成果展示 · 课程毕业名片</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="汤圆的 AI 编程学习成果展示页，包含项目路演与学习复盘，课程毕业名片。" />
+  <style>
+    :root {
+      --bg: #0f0f14;
+      --bg-card: #16161a;
+      --fg: #e6e6e8;
+      --fg-muted: #9b9ba3;
+      --accent: #7c3aed;
+      --accent-soft: rgba(124, 58, 237, 0.15);
+      --accent-cyan: #22d3ee;
+      --accent-orange: #fb923c;
+      --border: rgba(155, 155, 163, 0.2);
+      --font-main: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-main);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+      padding: 36px 24px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(34, 211, 238, 0.05) 100%);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+    .hero-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      background: linear-gradient(135deg, #e6e6e8, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 14px;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+    .hero-badge {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--accent-cyan);
+      background: rgba(34, 211, 238, 0.1);
+      border-radius: 999px;
+      border: 1px solid rgba(34, 211, 238, 0.3);
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--fg);
+    }
+    .section-title::before {
+      content: "";
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-cyan));
+      border-radius: 2px;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      border-color: rgba(124, 58, 237, 0.4);
+      box-shadow: 0 4px 24px rgba(124, 58, 237, 0.08);
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin: 0 0 6px;
+      color: var(--fg);
+    }
+    .card-meta {
+      font-size: 12px;
+      color: var(--fg-muted);
+      margin-bottom: 14px;
+    }
+    .card-meta .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+    .card-meta .tag.demo {
+      background: rgba(251, 146, 60, 0.15);
+      color: var(--accent-orange);
+    }
+    .card p {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: var(--fg-muted);
+    }
+    .card p:last-child {
+      margin-bottom: 0;
+    }
+    .card ul {
+      margin: 12px 0 0;
+      padding-left: 20px;
+      font-size: 14px;
+      color: var(--fg-muted);
+    }
+    .card ul li {
+      margin-bottom: 6px;
+    }
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--accent-cyan);
+      background: rgba(34, 211, 238, 0.1);
+      border-radius: 8px;
+      text-decoration: none;
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      transition: background 0.2s, color 0.2s;
+    }
+    .card-link:hover {
+      background: rgba(34, 211, 238, 0.2);
+      color: #67e8f9;
+    }
+    .card-link.demo-link {
+      color: var(--accent-orange);
+      background: rgba(251, 146, 60, 0.1);
+      border-color: rgba(251, 146, 60, 0.25);
+    }
+    .card-link.demo-link:hover {
+      background: rgba(251, 146, 60, 0.2);
+    }
+    .subsection {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border);
+    }
+    .subsection h4 {
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0 0 8px;
+      color: var(--fg);
+    }
+    .learning-item {
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      background: rgba(30, 30, 36, 0.6);
+      border-radius: 10px;
+      border-left: 3px solid var(--accent);
+    }
+    .learning-item h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 6px;
+      color: var(--fg);
+    }
+    .learning-item p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--fg-muted);
+    }
+    .path-list {
+      padding-left: 20px;
+      margin: 12px 0 0;
+    }
+    .path-list li {
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--fg-muted);
+    }
+    /* 项目展示图片 */
+    .project-showcase {
+      margin: 20px 0 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .project-showcase img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .project-showcase img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .project-showcase img[data-enlarge] {
+      cursor: zoom-in;
+    }
+    .project-showcase-caption {
+      font-size: 11px;
+      color: var(--fg-muted);
+      margin-top: 6px;
+      text-align: center;
+    }
+    .project-showcase-item {
+      break-inside: avoid;
+    }
+    .project-preview {
+      margin: 20px 0 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(34, 211, 238, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .project-preview a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 24px;
+      text-decoration: none;
+      color: var(--accent-cyan);
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    .project-preview a:hover {
+      color: #67e8f9;
+    }
+    .project-preview .preview-icon {
+      font-size: 48px;
+      opacity: 0.8;
+    }
+    /* 图片弹窗 */
+    .img-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.9);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .img-lightbox.active {
+      display: flex;
+    }
+    .img-lightbox img {
+      max-width: 95%;
+      max-height: 95vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .img-lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      font-size: 32px;
+      color: #fff;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+    .img-lightbox-close:hover {
+      opacity: 1;
+    }
+    @media (max-width: 600px) {
+      .project-showcase {
+        grid-template-columns: 1fr 1fr;
+      }
+      .project-showcase img {
+        height: 120px;
+      }
+    }
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--fg-muted);
+    }
+    @media (max-width: 600px) {
+      .page {
+        padding: 24px 16px 40px;
+      }
+      .hero-title {
+        font-size: 22px;
+      }
+      .card {
+        padding: 18px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <h1 class="hero-title">汤圆 · AI 学习成果展示</h1>
+      <p class="hero-sub">将课程学习内容融会贯通，制作公网可访问的网页，作为课程毕业名片</p>
+      <span class="hero-badge">课程毕业名片</span>
+    </header>
+
+    <!-- 一、项目路演 -->
+    <section>
+      <h2 class="section-title">一、项目路演</h2>
+      <p style="font-size: 14px; color: var(--fg-muted); margin: 0 0 24px;">
+        展示发现的痛点场景、MVP 产品，分享从点子到产品的挖掘思路。
+      </p>
+
+      <!-- 项目一：AI 膳食决策助手 -->
+      <article class="card">
+        <h3 class="card-title">AI 膳食决策助手</h3>
+        <div class="card-meta">
+          <span class="tag">已上线</span>
+          <span>MVP 产品 · 公网可访问</span>
+        </div>
+        <div class="subsection">
+          <h4>项目预览</h4>
+          <div class="project-preview">
+            <a href="https://ai-meal-decision-ass-9w6x.bolt.host" target="_blank" rel="noopener">
+              <span class="preview-icon">🍽️</span>
+              <span>点击访问 AI 膳食决策助手</span>
+              <span style="font-size: 12px; opacity: 0.8;">ai-meal-decision-ass-9w6x.bolt.host</span>
+            </a>
+          </div>
+        </div>
+        <div class="subsection">
+          <h4>痛点场景</h4>
+          <p>每天面对「吃什么」的决策焦虑：选择太多、营养搭配难、时间紧张时更难兼顾健康与便利。希望通过 AI 辅助，快速给出个性化膳食建议。</p>
+        </div>
+        <div class="subsection">
+          <h4>从点子到产品</h4>
+          <ul>
+            <li>从个人日常痛点出发，将「选餐难」抽象为可被 AI 增强的决策场景</li>
+            <li>用大模型 + 简单逻辑完成 MVP：输入偏好、场景，输出推荐方案</li>
+            <li>选择轻量部署方式（如 Bolt）快速上线，验证核心价值</li>
+          </ul>
+        </div>
+        <a class="card-link" href="https://ai-meal-decision-ass-9w6x.bolt.host" target="_blank" rel="noopener">→ 访问 AI 膳食决策助手</a>
+      </article>
+
+      <!-- 项目二：求职 AI 助手 -->
+      <article class="card">
+        <h3 class="card-title">求职 AI 助手（CareerAI）</h3>
+        <div class="card-meta">
+          <span class="tag demo">Demo 阶段</span>
+          <span>产品规划与界面已完成 · 飞书文档中展示</span>
+        </div>
+        <div class="subsection">
+          <h4>界面展示</h4>
+          <div class="project-showcase">
+            <div class="project-showcase-item">
+              <img src="assets/careerai-dashboard.png" alt="求职 AI 助手仪表盘" loading="lazy" data-enlarge />
+              <p class="project-showcase-caption">仪表盘</p>
+            </div>
+            <div class="project-showcase-item">
+              <img src="assets/careerai-resume.png" alt="简历优化工作室" loading="lazy" data-enlarge />
+              <p class="project-showcase-caption">简历优化</p>
+            </div>
+            <div class="project-showcase-item">
+              <img src="assets/careerai-job-analysis.png" alt="岗位分析报告" loading="lazy" data-enlarge />
+              <p class="project-showcase-caption">岗位分析</p>
+            </div>
+            <div class="project-showcase-item">
+              <img src="assets/careerai-mock-interview.png" alt="AI 模拟面试" loading="lazy" data-enlarge />
+              <p class="project-showcase-caption">AI 模拟面试</p>
+            </div>
+            <div class="project-showcase-item">
+              <img src="assets/careerai-review.png" alt="面试复盘分析" loading="lazy" data-enlarge />
+              <p class="project-showcase-caption">面试复盘</p>
+            </div>
+          </div>
+        </div>
+        <div class="subsection">
+          <h4>痛点场景</h4>
+          <p>求职者在找工作时面临多重挑战：简历优化、选择目标岗位、分析岗位技能、准备面试内容、面试后复盘总结。尤其对于转行或久未面试的群体，面对不断变化的求职市场，更需要一个专业助手——能智能分析岗位、结合个人简历和项目经验有针对性地准备面试、预测面试问题，并最好能进行模拟面试演练。</p>
+        </div>
+        <div class="subsection">
+          <h4>目标用户</h4>
+          <p>正在找工作的人。产品目标是为用户提供有针对性的简历优化建议和面试技巧，帮助他们快速高效地找到目标岗位。</p>
+        </div>
+        <div class="subsection">
+          <h4>MVP 核心功能</h4>
+          <ul>
+            <li><strong>简历优化</strong>：上传个人简历、项目经验，AI 提供左右对比优化建议（缺失技能、更优表述、量化成果影响）</li>
+            <li><strong>目标岗位分析</strong>：上传/粘贴目标岗位描述，分析岗位能力模型侧重点，输出结合岗位的简历优化建议、量身定制的自我介绍、核心项目复盘（匹配度强化）</li>
+            <li><strong>面试指南</strong>：提供面试建议文档，如自我介绍、重点项目介绍、应重点突出的能力等</li>
+            <li><strong>AI 模拟面试</strong>：多轮模拟（一面、二面、三面），AI 针对目标岗位深度提问，提供实时反馈与指导</li>
+            <li><strong>面试复盘与预测</strong>：分析面试表现亮点与不足，预测下一轮面试重点，生成准备清单</li>
+          </ul>
+        </div>
+        <div class="subsection">
+          <h4>从点子到产品</h4>
+          <ul>
+            <li>从求职全流程痛点出发，将「简历→投递→面试→复盘」拆成可被 AI 增强的环节</li>
+            <li>针对互联网产品设计、开发、数据分析等岗位，设计简历优化、岗位匹配、模拟面试能力</li>
+            <li>当前 Demo 已完成产品规划与界面设计，在飞书文档中展示；计划后续公网部署</li>
+          </ul>
+        </div>
+        <a class="card-link demo-link" href="https://my.feishu.cn/wiki/CWZYwHgkaicXZjkdJxVcOdOznee?from=from_copylink" target="_blank" rel="noopener">→ 查看飞书文档 Demo</a>
+      </article>
+    </section>
+
+    <!-- 二、学习复盘 -->
+    <section>
+      <h2 class="section-title">二、学习复盘</h2>
+      <p style="font-size: 14px; color: var(--fg-muted); margin: 0 0 24px;">
+        写下这几天的 AI 编程心得与收获，给其它伙伴可以参考的 AI 学习路径。
+      </p>
+
+      <div class="learning-item">
+        <h4>AI 编程心得</h4>
+        <p>这几天最大的收获是：从「用 AI 工具」到「用 AI 做产品」的思维方式转变。不再只是写 Prompt，而是把需求拆解成可被 AI 增强的模块，再选择合适的模型、平台和交互方式。例如膳食助手，就是把「选餐决策」拆成：输入理解、偏好匹配、推荐生成，每一步都可以用大模型来增强。</p>
+      </div>
+
+      <div class="learning-item">
+        <h4>收获与启发</h4>
+        <p>快速验证想法比完美实现更重要。用 Bolt、Coze 等低代码/无代码平台，能在很短时间内把点子变成可体验的 Demo，这对产品经理来说非常友好。同时，多动手做小项目，比只看教程更能加深对大模型能力边界和局限的理解。</p>
+      </div>
+
+      <div class="learning-item">
+        <h4>AI 学习路径建议（给伙伴们）</h4>
+        <ol class="path-list">
+          <li><strong>先会用</strong>：熟悉 ChatGPT、Claude、Cursor 等工具，建立对 AI 的直观感受</li>
+          <li><strong>再会拆</strong>：把真实问题拆成「AI 能做什么 + 人/系统要做什么」</li>
+          <li><strong>动手做</strong>：选一个小的个人痛点，用 Bolt / Coze / Vercel 等快速做出 MVP</li>
+          <li><strong>持续迭代</strong>：上线后收集反馈，再考虑接入知识库、微调、Agent 等进阶能力</li>
+        </ol>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>汤圆 · AI 学习成果展示页 · 课程毕业名片</p>
+      <p>本页可部署至 Vercel、GitHub Pages 等实现公网访问</p>
+    </footer>
+  </div>
+
+  <!-- 图片放大查看 -->
+  <div id="img-lightbox" class="img-lightbox" role="button" tabindex="0" aria-label="关闭">
+    <span class="img-lightbox-close" id="img-lightbox-close">×</span>
+    <img id="img-lightbox-img" src="" alt="" />
+  </div>
+
+  <script>
+    (function () {
+      const lightbox = document.getElementById('img-lightbox');
+      const lightboxImg = document.getElementById('img-lightbox-img');
+      const lightboxClose = document.getElementById('img-lightbox-close');
+      document.querySelectorAll('.project-showcase img[data-enlarge]').forEach(function (img) {
+        img.addEventListener('click', function () {
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt;
+          lightbox.classList.add('active');
+        });
+      });
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+      }
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox) closeLightbox();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeLightbox();
+      });
+    })();
+  </script>
+</body>
+</html>
