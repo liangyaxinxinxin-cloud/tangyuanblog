@@ -513,7 +513,33 @@
       background: rgba(15, 23, 42, 0.9);
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- marked.js：优先 jsdelivr，失败时自动尝试国内 CDN -->
+  <script>
+    (function(){
+      var CDNS = [
+        'https://cdn.jsdelivr.net/npm/marked/marked.min.js',
+        'https://cdn.bootcdn.net/ajax/libs/marked/9.1.6/marked.min.js',
+        'https://unpkg.com/marked@9.1.6/marked.min.js'
+      ];
+      var idx = 0;
+      function loadNext(){
+        if(idx >= CDNS.length){
+          document.getElementById('content').innerHTML = '<p style="color:#f97316;padding:20px;">内容加载失败，可能是网络限制导致。请尝试：<br>1）刷新页面；<br>2）使用 VPN 或更换网络；<br>3）下载 HTML 到本地用浏览器打开。</p>';
+          return;
+        }
+        var s = document.createElement('script');
+        s.src = CDNS[idx++];
+        s.onload = function(){ if(typeof marked!=='undefined') window.__markedReady=true; };
+        s.onerror = loadNext;
+        document.head.appendChild(s);
+      }
+      var first = document.createElement('script');
+      first.src = CDNS[0];
+      first.onload = function(){ if(typeof marked!=='undefined') window.__markedReady=true; };
+      first.onerror = loadNext;
+      document.head.appendChild(first);
+    })();
+  </script>
 </head>
 <body>
   <div class="site-header">
@@ -1583,9 +1609,14 @@ PM 需要关注：
 
   <script>
     (function () {
-      const src = document.getElementById('md-source').textContent;
-      // 自定义一点点渲染选项
-      marked.setOptions({
+      function runRender() {
+        if (typeof marked === 'undefined') {
+          document.getElementById('content').innerHTML = '<p style="color:#f97316;padding:20px;">Markdown 解析库加载失败，请刷新页面或更换网络后重试。</p>';
+          return;
+        }
+        const src = document.getElementById('md-source').textContent;
+        // 自定义一点点渲染选项
+        marked.setOptions({
         breaks: true,
         gfm: true
       });
@@ -1865,6 +1896,17 @@ PM 需要关注：
           }
         });
       }
+      } // end runRender
+
+      // 等待 marked 加载完成（可能来自备用 CDN，有延迟）
+      function waitAndRun() {
+        if (typeof marked !== 'undefined') {
+          runRender();
+        } else {
+          setTimeout(waitAndRun, 80);
+        }
+      }
+      waitAndRun();
     })();
   </script>
 </body>
