@@ -380,6 +380,35 @@
       background: rgba(30, 58, 138, 0.25);
       border-radius: 0 8px 8px 0;
     }
+    .note-hint {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 10px;
+      color: #9ca3af;
+    }
+    .note-target {
+      cursor: pointer;
+      transition: background 0.12s ease, text-decoration-color 0.12s ease;
+    }
+    .note-target:hover {
+      background: rgba(148, 163, 184, 0.08);
+    }
+    .note-active {
+      text-decoration-line: underline;
+      text-decoration-thickness: 2px;
+      text-decoration-color: #f97316;
+      text-underline-offset: 3px;
+      background: rgba(249, 115, 22, 0.08);
+      position: relative;
+    }
+    .note-has-comment::after {
+      content: "✎";
+      position: absolute;
+      right: -18px;
+      top: 0;
+      font-size: 11px;
+      color: #f97316;
+    }
     .footer-tip {
       margin-top: 26px;
       padding-top: 10px;
@@ -389,6 +418,99 @@
     }
     .footer-tip strong {
       color: #cbd5e1;
+    }
+    .note-panel {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 280px;
+      max-width: calc(100% - 32px);
+      background: radial-gradient(circle at top, #020617, #020617 55%, #020617);
+      border-radius: 16px;
+      box-shadow:
+        0 18px 40px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(30, 64, 175, 0.7);
+      padding: 10px 12px 12px;
+      font-size: 12px;
+      color: #e5e7eb;
+      z-index: 40;
+    }
+    .note-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .note-panel-title {
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .note-panel-close {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      cursor: pointer;
+      padding: 2px 4px;
+      font-size: 14px;
+    }
+    .note-panel-close:hover {
+      color: #e5e7eb;
+    }
+    .note-panel-preview {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+      max-height: 48px;
+      overflow: hidden;
+    }
+    .note-panel-textarea {
+      width: 100%;
+      min-height: 68px;
+      resize: vertical;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.8);
+      color: #e5e7eb;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-family: inherit;
+      box-sizing: border-box;
+      margin-bottom: 6px;
+    }
+    .note-panel-textarea:focus {
+      outline: none;
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.6);
+    }
+    .note-panel-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+    .note-panel-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 4px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .note-panel-btn-save {
+      background: linear-gradient(to right, #f97316, #f59e0b);
+      color: #111827;
+    }
+    .note-panel-btn-save:hover {
+      filter: brightness(1.05);
+    }
+    .note-panel-btn-delete {
+      background: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: #e5e7eb;
+    }
+    .note-panel-btn-delete:hover {
+      background: rgba(15, 23, 42, 0.9);
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -401,9 +523,10 @@
         <span>AI Product School</span>
       </a>
       <div class="nav-tabs">
-        <span class="nav-pill active">AI 产品经理理论课</span>
-        <span class="nav-pill">（预留）实战案例库</span>
-        <span class="nav-pill">（预留）面试题刷题区</span>
+        <span class="nav-pill active" data-view="theory">AI 产品经理理论课</span>
+        <span class="nav-pill" data-view="results">学习成果展示</span>
+        <span class="nav-pill" data-view="cases">（预留）实战案例库</span>
+        <span class="nav-pill" data-view="interview">（预留）面试题刷题区</span>
       </div>
     </div>
   </div>
@@ -437,9 +560,24 @@
           <article id="content"></article>
           <div class="footer-tip">
             <strong>提示：</strong>建议将本页加入浏览器书签，作为你的 AI 产品“随身知识库”。若原文有更新，可直接替换同名 <code>.md</code> 与本 <code>.html</code> 文件。
+            <div class="note-hint">小技巧：点击正文中的任意段落或列表行，可以为其添加/取消橙色下划线标记，用作本地笔记（记录保存在当前浏览器）。</div>
           </div>
         </div>
       </main>
+    </div>
+  </div>
+
+  <!-- 段落笔记编辑面板 -->
+  <div id="note-panel" class="note-panel" style="display:none;">
+    <div class="note-panel-header">
+      <div class="note-panel-title">段落笔记</div>
+      <button class="note-panel-close" type="button" aria-label="关闭笔记面板">×</button>
+    </div>
+    <div class="note-panel-preview" id="note-panel-preview"></div>
+    <textarea id="note-panel-textarea" class="note-panel-textarea" placeholder="为这段内容写点自己的理解、疑问或面试要点..."></textarea>
+    <div class="note-panel-actions">
+      <button id="note-panel-save" class="note-panel-btn note-panel-btn-save" type="button">保存笔记</button>
+      <button id="note-panel-delete" class="note-panel-btn note-panel-btn-delete" type="button">删除笔记</button>
     </div>
   </div>
 
@@ -1454,6 +1592,154 @@ PM 需要关注：
       const html = marked.parse(src);
       const contentEl = document.getElementById('content');
       contentEl.innerHTML = html;
+
+      // 为可做笔记的元素添加标记 class 和持久化 ID
+      const noteStorageKey = 'ai-pm-handbook-notes';
+      const noteCommentKey = 'ai-pm-handbook-note-comments';
+      const noteTargets = contentEl.querySelectorAll('p, li');
+      noteTargets.forEach((el, idx) => {
+        el.classList.add('note-target');
+        el.setAttribute('data-note-id', String(idx));
+      });
+
+      // 读取已保存的笔记高亮
+      let savedNotes = [];
+      try {
+        const raw = window.localStorage.getItem(noteStorageKey);
+        if (raw) {
+          savedNotes = JSON.parse(raw);
+        }
+      } catch (e) {
+        savedNotes = [];
+      }
+      if (Array.isArray(savedNotes)) {
+        savedNotes.forEach(id => {
+          const el = contentEl.querySelector('[data-note-id="' + id + '"]');
+          if (el) el.classList.add('note-active');
+        });
+      }
+
+      // 读取已有的笔记评论
+      let noteComments = {};
+      try {
+        const rawComments = window.localStorage.getItem(noteCommentKey);
+        if (rawComments) {
+          noteComments = JSON.parse(rawComments) || {};
+        }
+      } catch (e) {
+        noteComments = {};
+      }
+      Object.keys(noteComments).forEach(id => {
+        const el = contentEl.querySelector('[data-note-id="' + id + '"]');
+        if (el && noteComments[id]) {
+          el.classList.add('note-has-comment');
+        }
+      });
+
+      // 笔记编辑面板相关元素
+      const notePanel = document.getElementById('note-panel');
+      const notePanelPreview = document.getElementById('note-panel-preview');
+      const notePanelTextarea = document.getElementById('note-panel-textarea');
+      const notePanelSave = document.getElementById('note-panel-save');
+      const notePanelDelete = document.getElementById('note-panel-delete');
+      const notePanelClose = document.querySelector('.note-panel-close');
+      let currentNoteId = null;
+
+      function openNotePanelForElement(el) {
+        if (!el) return;
+        const id = el.getAttribute('data-note-id');
+        if (!id) return;
+        currentNoteId = id;
+        // 预览选中段落的前几十个字
+        const text = (el.textContent || '').trim().replace(/\s+/g, ' ');
+        notePanelPreview.textContent = text.length > 80 ? text.slice(0, 80) + '…' : text;
+        notePanelTextarea.value = noteComments[id] || '';
+        notePanel.style.display = 'block';
+      }
+
+      function closeNotePanel() {
+        notePanel.style.display = 'none';
+        currentNoteId = null;
+      }
+
+      notePanelSave.addEventListener('click', () => {
+        if (currentNoteId == null) return;
+        const value = notePanelTextarea.value.trim();
+        const el = contentEl.querySelector('[data-note-id="' + currentNoteId + '"]');
+        if (value) {
+          noteComments[currentNoteId] = value;
+          if (el) el.classList.add('note-has-comment', 'note-active');
+        } else {
+          delete noteComments[currentNoteId];
+          if (el) el.classList.remove('note-has-comment');
+        }
+        try {
+          window.localStorage.setItem(noteCommentKey, JSON.stringify(noteComments));
+        } catch (e) {
+          // 忽略本地存储错误
+        }
+      });
+
+      notePanelDelete.addEventListener('click', () => {
+        if (currentNoteId == null) return;
+        const el = contentEl.querySelector('[data-note-id="' + currentNoteId + '"]');
+        notePanelTextarea.value = '';
+        delete noteComments[currentNoteId];
+        if (el) el.classList.remove('note-has-comment');
+        try {
+          window.localStorage.setItem(noteCommentKey, JSON.stringify(noteComments));
+        } catch (e) {}
+      });
+
+      notePanelClose.addEventListener('click', () => {
+        closeNotePanel();
+      });
+
+      // 单击正文段落/列表行：添加标记（如未标记）并打开笔记编辑面板
+      contentEl.addEventListener('click', (event) => {
+        const target = event.target.closest('p, li');
+        if (!target || !contentEl.contains(target)) return;
+        const id = target.getAttribute('data-note-id');
+        if (!id) return;
+
+        let current = new Set(Array.isArray(savedNotes) ? savedNotes : []);
+        if (!target.classList.contains('note-active')) {
+          target.classList.add('note-active');
+          current.add(id);
+          savedNotes = Array.from(current);
+          try {
+            window.localStorage.setItem(noteStorageKey, JSON.stringify(savedNotes));
+          } catch (e) {
+            // 忽略本地存储错误
+          }
+        }
+
+        // 打开或更新笔记编辑面板
+        openNotePanelForElement(target);
+      });
+
+      // 双击正文段落/列表行：确认后取消标记（不删除已有评论）
+      contentEl.addEventListener('dblclick', (event) => {
+        const target = event.target.closest('p, li');
+        if (!target || !contentEl.contains(target)) return;
+        const id = target.getAttribute('data-note-id');
+        if (!id) return;
+        if (!target.classList.contains('note-active')) return;
+
+        const ok = window.confirm('确定要取消这段内容的橙色标记吗？（已保存的文字笔记不会被删除）');
+        if (!ok) return;
+
+        target.classList.remove('note-active');
+
+        let current = new Set(Array.isArray(savedNotes) ? savedNotes : []);
+        current.delete(id);
+        savedNotes = Array.from(current);
+        try {
+          window.localStorage.setItem(noteStorageKey, JSON.stringify(savedNotes));
+        } catch (e) {
+          // 忽略本地存储错误
+        }
+      });
 
       // 自动生成顶部小目录（提取 h2）
       const headings = contentEl.querySelectorAll('h2');
